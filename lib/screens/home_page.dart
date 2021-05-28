@@ -1,4 +1,5 @@
 import 'package:crypto_currency/models/coin.dart';
+import 'package:crypto_currency/screens/detail_page.dart';
 import 'package:crypto_currency/services/services.dart';
 import 'package:flutter/material.dart';
 
@@ -19,22 +20,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Services.getCoins(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        print('2');
-        if (!snapshot.hasData) {
-          print('3');
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          coins = snapshot.data;
-          filteredCoins = snapshot.data;
-          print('4');
-          return dataReadyWidget();
-        }
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Crypto Currency'),
+      ),
+      body: FutureBuilder(
+        future: Services.getCoins(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          print('2');
+          if (!snapshot.hasData) {
+            print('3');
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            coins = snapshot.data;
+            if (filteredCoins.isEmpty) {
+              filteredCoins = snapshot.data;
+            }
+            print('4');
+            return dataReadyWidget();
+          }
+        },
+      ),
     );
   }
 
@@ -103,14 +111,14 @@ class _HomePageState extends State<HomePage> {
         return Card(
           child: ListTile(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => DetailsPage(
-              //       filteredCoins[index],
-              //     ),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailPage(
+                    filteredCoins[index],
+                  ),
+                ),
+              );
             },
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
